@@ -4,13 +4,21 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 
 const app = express();
-app.use(cors());
+const server = http.createServer(app); // HTTP sunucusu oluşturuldu
 
-const server = http.createServer(app);
+// CORS yapılandırması (Vercel frontend URL'ni buraya yaz)
+app.use(cors({
+  origin: "https://webfe-rose.vercel.app",
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"]
+}));
+
+// Socket.io sunucusu oluşturuluyor ve CORS yapılandırması ekleniyor
 const io = new Server(server, {
   cors: {
-    origin: "*",
-  },
+    origin: "https://webfe-rose.vercel.app", // Vercel frontend URL'ni buraya yaz
+    methods: ["GET", "POST"]
+  }
 });
 
 const rooms = {};
@@ -48,4 +56,5 @@ io.on("connection", (socket) => {
   });
 });
 
+// Sunucuyu 5000 portunda başlat
 server.listen(5000, () => console.log("Server running on port 5000"));
