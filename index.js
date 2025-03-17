@@ -50,8 +50,10 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-      rooms[roomId] = rooms[roomId].filter((id) => id !== socket.id);
-      console.log(`User ${socket.id} left room ${roomId}`);
+      if (rooms[roomId]) {
+        rooms[roomId] = rooms[roomId].filter((id) => id !== socket.id);
+        socket.broadcast.emit("user-disconnected", socket.id);
+      }
     });
   });
 });
