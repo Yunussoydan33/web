@@ -48,7 +48,10 @@ io.on("connection", (socket) => {
         id: socket.id,
       });
     });
-
+    socket.on("send-message", (message) => {
+      io.emit("receive-message", message);
+    });
+    
     socket.on("disconnect", () => {
       if (rooms[roomId]) {
         rooms[roomId] = rooms[roomId].filter((id) => id !== socket.id);
